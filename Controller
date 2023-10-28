@@ -1,0 +1,82 @@
+public class Main {
+    public static void main(String[] args) {
+        CinemaApp cinema = new CinemaApp();
+
+        int[] seatsToBook = {2, 3, 4}; // Приклад послідовних місць для бронювання
+        cinema.bookSeats(1, 3, seatsToBook); // Забронювати місця
+
+        cinema.printSeatingArrangement(1); // Вивести схему розміщення місць для залу 1
+    }
+}
+
+class CinemaApp {
+    private int[][][] cinemaSeats;
+
+    //для ініціалізації масиву
+    public CinemaApp() {
+        this.cinemaSeats = new int[5][10][20]; // 5 зали, 10 рядів, 20 місць
+        initializeSeats(); // Ініціалізація місць у кінотеатрі
+    }
+
+    //Ініціалізація місць у кінотеатрі
+    private void initializeSeats() {
+        for (int i = 0; i < cinemaSeats.length; i++) {
+            for (int j = 0; j < cinemaSeats[i].length; j++) {
+                for (int k = 0; k < cinemaSeats[i][j].length; k++) {
+                    cinemaSeats[i][j][k] = 0;
+                }
+            }
+        }
+    }
+
+    //для бронювання місць
+    public void bookSeats(int hallNumber, int row, int[] seats) {
+        for (int seat : seats) {
+            if (cinemaSeats[hallNumber][row][seat] == 0) {
+                cinemaSeats[hallNumber][row][seat] = 1;
+            } else {
+                System.out.println("Місце " + seat + " в ряду " + row + " в залі " + hallNumber + " вже заброньоване.");
+            }
+        }
+    }
+
+    //для скасування бронювання місць
+    public void cancelBooking(int hallNumber, int row, int[] seats) {
+        for (int seat : seats) {
+            cinemaSeats[hallNumber][row][seat] = 0;
+        }
+    }
+
+    //для перевірки доступності заданої кількості місць
+    public boolean checkAvailability(int screen, int numSeats) {
+        for (int i = 0; i < cinemaSeats[screen].length; i++) {
+            int consecutiveCount = 0;
+            for (int j = 0; j < cinemaSeats[screen][i].length; j++) {
+                if (cinemaSeats[screen][i][j] == 0) {
+                    consecutiveCount++;
+                    if (consecutiveCount == numSeats) {
+                        return true;
+                    }
+                } else {
+                    consecutiveCount = 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    //для виводу схеми розміщення місць для заданого залу
+    public void printSeatingArrangement(int hallNumber) {
+        System.out.println("Схема розміщення місць для залу " + hallNumber + ":");
+        for (int i = 0; i < cinemaSeats[hallNumber].length; i++) {
+            for (int j = 0; j < cinemaSeats[hallNumber][i].length; j++) {
+                if (cinemaSeats[hallNumber][i][j] == 0) {
+                    System.out.print("O ");
+                } else {
+                    System.out.print("X ");
+                }
+            }
+            System.out.println();
+        }
+    }
+}
